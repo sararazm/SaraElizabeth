@@ -31,7 +31,7 @@ const {
   return(
 
 <div className='Form'>
-  <div className='title'>Sign up</div>
+  <div className='title'>Sara and Lizzys list</div>
   <div className='inputs'>
 <form onSubmit={handleSubmit(onSubmit)}>
 
