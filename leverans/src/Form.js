@@ -3,6 +3,7 @@ import './App.css'
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import Recaptcha from './ReCAPTCHA';
 
 
 const Form = ()=>{
@@ -69,8 +70,9 @@ const {
    placeholder='Confirm password...' 
    {...register("confirmPassword")} />
   <p>{errors.confirmPassword && 'Passwords should match!'}</p>
+  <Recaptcha  />
 
-   <input type="submit" id="submit"  />
+   <input type="submit" disabled id="login_btn" />
 
     </form>
   </div>

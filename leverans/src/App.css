@@ -32,10 +32,17 @@ body {
 }
 
 form {
+  width: 50vw;
   display: flex;
   flex-direction: column;
+
 }
 
 p {
   color: red;
+  font-size: small;
+}
+
+.captcha {
+align-items: center;
 }
