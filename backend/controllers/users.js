@@ -25,7 +25,7 @@ exports.delete_user = (req, res) => {
 };
 
 
-let users = [];
+const users = [];
 
 const createUser = (user) => {
   const id = uuid.v4();
