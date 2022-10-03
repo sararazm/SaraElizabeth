@@ -5,7 +5,7 @@ exports.get_all_users = (req, res) => {
 };
 
 exports.post_users = (req, res) => {
-  res.send(createUser(req.body), 'User created!');
+  res.status(200).json(createUser(req.body));
 };
 
 exports.get_user = (req, res) => {
@@ -25,11 +25,16 @@ exports.delete_user = (req, res) => {
 };
 
 
-const users = [];
+let users = [];
 
 const createUser = (user) => {
-  const id = uuid.v4();
-  users.push({id, ...user});
+  const newUser = {
+    id: uuid.v4(),
+    name: user.name,
+    lastName: user.lastName
+}
+
+  users.push(newUser);
 }
 
 const getAllUsers = () => {
@@ -52,5 +57,5 @@ const deleteUser = (id) => {
 }
 
 const delete_all_users = () => {
-  users = []
+  return users = [];
 }
