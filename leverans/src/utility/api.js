@@ -3,7 +3,7 @@ const fetchData = (url, method, body = {}) => {
         method,
     }
 
-    if (method == 'POST' || method == 'PUT') {
+    if (method === 'POST' || method === 'PUT') {
         options.headers = {
             "content-Type": "application/json",
         }

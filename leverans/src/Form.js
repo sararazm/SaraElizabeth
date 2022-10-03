@@ -1,83 +1,115 @@
-import React from 'react'
-import './App.css'
+import React , { useState, useEffect} from 'react';
+import "./App.css";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import Recaptcha from './ReCAPTCHA';
+import Recaptcha from "./ReCAPTCHA";
+import { get, put, taBort, post } from "./utility/api.js";
+import UserInfo from './UserInfo';
+import uuid from "react-uuid";
 
+const Form = () => {
+  const [name, setName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [users, setUser] = useState([]);
+  const [updateName, setUpdateName] = useState('')
+  const [updateLastName, setUpdateLastName] = useState('')
 
-const Form = ()=>{
- 
+  const addUser = () => {
+    const newUser = {
+      id: uuid(),
+      name,
+      lastName,
+    };
 
-const schema = yup.object().shape({
-  firstName: yup.string().required("Must have firstname"),
-  lastName: yup.string().required("Enter lastname"),
-  email: yup.string().email().required("Email is required"),
-  age: yup.number().positive("Must be a number"),
-  password: yup.string().min(8).max(15).required("Password is required"),
-  confirmPassword: yup.string().oneOf([yup.ref("password"), null]).required("Passwords must match"),
-})
-const {
-  register,
-  handleSubmit,
-  formState: { errors },
-  } = useForm({
-  resolver: yupResolver(schema),
-});
+    post("/api/users/post", newUser);
+    setUser([...users, newUser]);
+  };
 
-  const onSubmit =(data)=>{
-    console.log(data);
+  useEffect(() => {
+    get("/api/users/").then(
+      (res) => {return setUser(res)}
+    );
+  }, [setUser]);
+
+  const deleteUser = (id) => {
+    taBort(`/api/users/delete/${id}`).then((res) => {
+      get("/api/users/").then((res) => setUser(res));
+    });
   }
-  return(
 
-<div className='Form'>
-  <div className='title'>Sara and Lizzys list</div>
-  <div className='inputs'>
-<form onSubmit={handleSubmit(onSubmit)}>
+  const deleteAllUsers = () => {
+    taBort("/api/users/delete").then((res) => {
+      get("/api/users/").then((res) => setUser(res));
+    });;
+  };
 
-  <input type="text" 
-   name='firstName'
-   placeholder='Firstname...'  
-   {...register("firstName")} />
-   <p>{errors.firstName?.message}</p>
+  const updateUser = (id) => {
+    put(`/api/users/update/${id}`, {
+      id,
+      name: updateName,
+      lastName: updateLastName,
+    }).then((res) => {
+      get("/api/users/").then((res) => setUser(res));
+    });
+  };
 
-  <input type="text"
-   name='lastName'
-   placeholder='Lastname...'  
-   {...register("lastName")} />
-   <p>{errors.lastName?.message}</p>
+  const schema = yup.object().shape({
+    name: yup.string().required("Must have firstname"),
+    lastName: yup.string().required("Enter lastname"),
+  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
 
-  <input type="text" 
-  name='email' 
-  placeholder='Email...'  
-  {...register("email")}/>
-<p>{errors.email?.message}</p>
-
-  <input type="number"
-   name='age' 
-   placeholder='Age..'  
-   {...register("age")} />
- <p>{errors.age?.message}</p>
-
-  <input type="password" 
-  name='password' 
-  placeholder='Password...' 
-  {...register("password")}/>
-<p>{errors.password?.message}</p>
-
-  <input type="password"
-   name='confirmPassword'
-   placeholder='Confirm password...' 
-   {...register("confirmPassword")} />
-  <p>{errors.confirmPassword && 'Passwords should match!'}</p>
-  <Recaptcha  />
-
-   <input type="submit" disabled id="login_btn" />
-
-    </form>
-  </div>
-</div>
-
-  )
-}
+  return (
+    <div className="Form">
+      <div className="title">Sara and Lizzys list</div>
+      <div className="inputs">
+        <form onSubmit={handleSubmit(addUser)}>
+          <input
+            type="text"
+            name="Name"
+            value={name}
+            placeholder="Name..."
+            {...register("name")}
+            onChange={(event) => setName(event.target.value)}
+          />
+          <p>{errors.name?.message}</p>
+          <input
+            type="text"
+            name="lastName"
+            value={lastName}
+            placeholder="Lastname..."
+            {...register("lastName")}
+            onChange={(event) => setLastName(event.target.value)}
+          />
+          <p>{errors.lastName?.message}</p>
+          <Recaptcha />
+          <input type="submit" disabled id="login_btn" />
+        </form>
+      </div>
+      <button className="delete" onClick={() => deleteAllUsers()}>Delete all users</button>
+      {users.map((users) => {
+        return <UserInfo 
+        key={users.id}
+        id={users.id}
+        name={users.name} 
+        lastName={users.lastName} 
+        deleteUser={deleteUser} 
+        deleteAllUsers={deleteAllUsers}
+        updateUser={updateUser} 
+        setUpdateName={setUpdateName} 
+        setUpdateLastName={setUpdateLastName} 
+        updateName={updateName}
+        updateLastName={updateLastName}
+        />
+      })}
+    </div>
+  );
+};
 export default Form;
