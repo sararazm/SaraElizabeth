@@ -6,6 +6,7 @@ exports.get_all_users = (req, res) => {
 
 exports.post_users = (req, res) => {
   res.status(200).json(createUser(req.body));
+  // res.send(users);
 };
 
 exports.get_user = (req, res) => {
@@ -42,7 +43,8 @@ const getAllUsers = () => {
 } 
 
 const getUser = (id) => {
-  return users.find(user => user.id === id)
+  const foundUser = users.find(user => user.id === id)
+  return foundUser
 }
 
 const updateUser = (id, user) => {
