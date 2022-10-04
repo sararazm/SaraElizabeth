@@ -150,15 +150,15 @@
  *        description: Some server error
  */
 
-// /**
-//  * @swagger
-//  * /api/users/delete:
-//  *  delete all:
-//  *    summary: Remove all users
-//  *    tags: [Users]
-//  *    responses:
-//  *      200:
-//  *        description: All users were deleted
-//  *      500:
-//  *        description: Some server error
-//  */
+/**
+ * @swagger
+ * /api/users/delete:
+ *  delete:
+ *    summary: Remove all users
+ *    tags: [Users]
+ *    responses:
+ *      200:
+ *        description: All users were deleted
+ *      500:
+ *        description: Some server error
+ */
